@@ -12,6 +12,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/fatih/color"
 	ffmpeg "github.com/u2takey/ffmpeg-go"
 )
 
@@ -64,7 +65,10 @@ func main() {
 	var fullURLFile string = "https://demo.twilio.com/docs/classic.mp3"
 	fileName := downloadFile(fullURLFile)
 
+	color.Set(color.FgHiGreen)
 	fmt.Println("Transcoding MP3 file to OGG, WAV, FLAC formats.")
+	color.Unset()
+
 	var wg sync.WaitGroup
 	outputCodecs := [3]string{"ogg", "wav", "flac"}
 	for _, outputFile := range outputCodecs {
@@ -76,5 +80,8 @@ func main() {
 
 	elapsed := time.Since(start)
 	log.Printf("Execution took %s", elapsed)
+
+	color.Set(color.FgHiGreen)
 	fmt.Println("Finished transcoding MP3 file to OGG, WAV, FLAC formats.")
+	color.Unset()
 }
