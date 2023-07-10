@@ -39,9 +39,14 @@ func downloadFile(fileURL string) string {
 	return fileName
 }
 
-func transcodeAudioFile(inputFile string, outputFile string, wg *sync.WaitGroup) {
+func transcodeAudioFile(inputFile string, outputCodec string, wg *sync.WaitGroup) {
 	defer wg.Done()
 
+	outputFile := fmt.Sprintf(
+		"%s.%s",
+		strings.TrimSuffix(inputFile, filepath.Ext(inputFile)),
+		outputCodec,
+	)
 	err := ffmpeg.
 		Input(inputFile).
 		Output(outputFile).
@@ -60,8 +65,8 @@ func main() {
 	fileName := downloadFile(fullURLFile)
 
 	var wg sync.WaitGroup
-	outputFilenames := [3]string{"classic.ogg", "classic.wav", "classic.flac"}
-	for _, outputFile := range outputFilenames {
+	outputCodecs := [3]string{"ogg", "wav", "flac"}
+	for _, outputFile := range outputCodecs {
 		wg.Add(1)
 		go transcodeAudioFile(fileName, outputFile, &wg)
 	}
