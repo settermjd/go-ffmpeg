@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"path/filepath"
+	"strings"
 	"sync"
 	"time"
 
@@ -21,7 +23,7 @@ func downloadFile(fileURL string) string {
 	}
 	defer resp.Body.Close()
 
-	fileName := path.Base(req.URL.Path)
+	fileName := path.Base(fileURL)
 	file, err := os.Create(fileName)
 	if err != nil {
 		log.Fatal(err)
