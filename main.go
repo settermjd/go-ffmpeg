@@ -6,21 +6,18 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path"
 )
 
-func downloadFile(fileURL string, fileName string) {
-	client := http.Client{
-		CheckRedirect: func(r *http.Request, via []*http.Request) error {
-			r.URL.Opaque = r.URL.Path
-			return nil
-		},
-	}
-	resp, err := client.Get(fileURL)
-	if err != nil {
-		log.Fatal(err)
+func downloadFile(fileURL string) {
+	req, _ := http.NewRequest("GET", fileURL, nil)
+	resp, _ := http.DefaultClient.Do(req)
+	if resp.StatusCode != 200 {
+		log.Fatalf("Error while downloading: %v", resp.StatusCode)
 	}
 	defer resp.Body.Close()
 
+	fileName := path.Base(req.URL.Path)
 	file, err := os.Create(fileName)
 	if err != nil {
 		log.Fatal(err)
@@ -35,6 +32,6 @@ func downloadFile(fileURL string, fileName string) {
 }
 
 func main() {
-	var fullURLFile, fileName string = "https://demo.twilio.com/docs/classic.mp3", "classic.mp3"
-	downloadFile(fullURLFile, fileName)
+	var fullURLFile string = "https://demo.twilio.com/docs/classic.mp3"
+	downloadFile(fullURLFile)
 }
