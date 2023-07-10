@@ -34,7 +34,7 @@ func downloadFile(fileURL string) string {
 	}
 	defer file.Close()
 
-	fmt.Printf("Downloaded a file %s with size %d\n", fileName, size)
+	fmt.Printf("Downloaded %s (%d bytes)\n\n", fileName, size)
 
 	return fileName
 }
@@ -64,6 +64,7 @@ func main() {
 	var fullURLFile string = "https://demo.twilio.com/docs/classic.mp3"
 	fileName := downloadFile(fullURLFile)
 
+	fmt.Println("Transcoding MP3 file to OGG, WAV, FLAC formats.")
 	var wg sync.WaitGroup
 	outputCodecs := [3]string{"ogg", "wav", "flac"}
 	for _, outputFile := range outputCodecs {
@@ -75,4 +76,5 @@ func main() {
 
 	elapsed := time.Since(start)
 	log.Printf("Execution took %s", elapsed)
+	fmt.Println("Finished transcoding MP3 file to OGG, WAV, FLAC formats.")
 }
